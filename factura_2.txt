@@ -1,0 +1,8 @@
+Comanda nr.2
+Data: 2021-05-27T00:52:24.707185300
+Produse:
+1: Spicy Pickled Shallots 
+2: Fresh Corn Tortillas 
+3: Quick & Spicy Asian Pickles 
+
+Pret total: 205

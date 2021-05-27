@@ -1,0 +1,8 @@
+Comanda nr.1
+Data: 2021-05-27T00:52:16.450690200
+Produse:
+1: Smoked Caviar and Hummus on Pita Toasts 
+2: Cauliflower-Leek Purée 
+3: Cilantro-Tomato Salsa 
+
+Pret total: 124
