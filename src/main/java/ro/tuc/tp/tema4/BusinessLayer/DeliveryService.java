@@ -8,6 +8,7 @@ import ro.tuc.tp.tema4.model.Inregistrare;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -35,15 +36,17 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
 
     /**
      * importarea produselor din excel
+     *
      * @param path
      */
     @Override
     public void importProduct(String path) {
-        products= ReadExcel.read(path);
+        products = ReadExcel.read(path);
     }
 
     /**
      * adaugarea unui produs
+     *
      * @param p
      */
     @Override
@@ -54,6 +57,7 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
 
     /**
      * Editeaza caracteristicile unui produs
+     *
      * @param title
      * @param p
      */
@@ -72,8 +76,9 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
 
     /**
      * Crearea unui nou produs
+     *
      * @param title titlul produsului
-     * @param p produsul
+     * @param p     produsul
      */
     @Override
     public void createProduct(String title, List<BaseProduct> p) {
@@ -83,6 +88,7 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
 
     /**
      * stergerea unui produs din lista de produse
+     *
      * @param p
      */
     @Override
@@ -103,8 +109,9 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
 
     /**
      * generarea raportului care afiseaza comenzile dintr-o perioada de timp
+     *
      * @param startHour ora de inceput
-     * @param endHour ora de final
+     * @param endHour   ora de final
      * @return returneaza un string cu produsele comandate in intervalul orar
      */
     @Override
@@ -123,6 +130,7 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
 
     /**
      * Generarea raportului in care un produs a fost comandat de mai multe de n ori
+     *
      * @param times numarul de comenzi ale produsului
      * @return returneaza un string cu produsele comandate
      */
@@ -151,7 +159,8 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
 
     /**
      * Generarea raportului in care un client a comandat de un anumit numar de ori si o valoare mai mare decat cea specificata
-     * @param times numarul de comenzi
+     *
+     * @param times    numarul de comenzi
      * @param minValue valoarea minima a comenzii
      * @return
      */
@@ -159,29 +168,26 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
     public String generateReports3(int times, int minValue) {
         Set<Order> orders = DeliveryService.getOrders().keySet();
         orders = orders.stream().filter(order -> getOrderValue(order) >= minValue).collect(Collectors.toSet());
-        List<Integer> clientsID = new ArrayList<>();
-        List<Integer> finalClientsID = clientsID;
-        orders.forEach(order -> {
-            if (!finalClientsID.contains(order.getClientID()))
-                finalClientsID.add(order.getClientID());
-        });
-        clientsID = clientsID.stream().sorted().collect(Collectors.toList());
+        Set<Integer> clientsID = new HashSet<>();
+        orders.forEach(order -> clientsID.add(order.getClientID()));
         StringBuilder sb = new StringBuilder();
         Set<Order> finalOrders = orders;
         AtomicInteger i = new AtomicInteger(1);
+        AtomicReference<String> nume = new AtomicReference<>();
         clientsID.forEach(id -> {
-            if (finalOrders.stream().filter(order -> order.getClientID() == id).count() >= times)
-                sb.append("  ").append(i.getAndIncrement()).append(". ").append(getClientName(id)).append(" (id = ").append(id).append(")\n");
+            if (finalOrders.stream().filter(order -> order.getClientID() == id).count() >= times) {
+                nume.set(getClientName(id));
+                if (nume.get() != null)
+                    sb.append("  ").append(i.getAndIncrement()).append(". ").append(getClientName(id)).append(" (id = ").append(id).append(")\n");
+            }
         });
         return "Clientii care au comandat de " + times + " ori, iar valoarea comenzii a fost peste " + minValue + "\n" + sb.toString();
     }
 
     private String getClientName(int id) {
-        System.out.println("---" + id);
-        for (Client client : Inregistrare.getCl()) {
-            System.out.println(client.getId() + "---");
-        }
-        return Inregistrare.getCl().stream().filter(c -> c.getId() == id).collect(Collectors.toList()).get(0).getNume();
+        List<Client> clienti = Inregistrare.getCl().stream().filter(c -> c.getId() == id).collect(Collectors.toList());
+        if (clienti.size() > 0) return clienti.get(0).getNume();
+        return null;
     }
 
     private int getOrderValue(Order order) {
@@ -190,6 +196,7 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
 
     /**
      * Genereaza raportul in care o comanda a fost comandata in acea zi
+     *
      * @param date data in care s-a facut comanda
      * @return returneaza un string cu comenzile
      */
@@ -224,20 +231,21 @@ public class DeliveryService extends Observable implements IDeliveryServiceProce
     @Override
     public void createOrder(Order or, List<MenuItem> prod) {
         orders.put(or, prod);
-        FileWriter1.generareFactura(or,prod);
+        FileWriter1.generareFactura(or, prod);
     }
 
     /**
      * cautarea produsului dupa un anumit criteriu si o valoare
+     *
      * @param criteriu criteriul dupa care se cauta produsul
-     * @param val valoarea dupa care se cauta produsul
+     * @param val      valoarea dupa care se cauta produsul
      * @return returneaza produsele care se potrivesc criteriului
      */
     @Override
     public List<MenuItem> searchProd(String criteriu, String val) {
         if (criteriu.equals("Title"))
             return products.stream()
-                    .filter(p -> (p instanceof BaseProduct) ? ((BaseProduct) p).getTitle().contains(val) : ((CompositeProduct) p).getTitle().contains(val))
+                    .filter(p -> (p instanceof BaseProduct) ? ((BaseProduct) p).getTitle().toLowerCase().contains(val.toLowerCase(Locale.ROOT)) : ((CompositeProduct) p).getTitle().toLowerCase().contains(val.toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         else if (criteriu.equals("Rating")) {
             String[] split = val.split("-");

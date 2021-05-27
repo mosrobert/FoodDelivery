@@ -33,14 +33,15 @@ public class ClientGUI {
      */
     public void Client(int id) {
         this.id = id;
-        ClientGUI window = new ClientGUI();
+        ClientGUI window = new ClientGUI(id);
         window.frame.setVisible(true);
     }
 
     /**
      * Create the application.
      */
-    public ClientGUI() {
+    public ClientGUI(int id) {
+        this.id=id;
         initialize();
     }
 
@@ -79,7 +80,8 @@ public class ClientGUI {
         orderBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Order order = new Order(DeliveryService.getOrders().keySet().size() + 1, id, LocalDateTime.now());
+                int ordId=DeliveryService.getOrders().keySet().size();
+                Order order = new Order(ordId+1, id, LocalDateTime.now());
                 ds.createOrder(order, prod);
                 Serializator.serializareComenzi();
                 prod = new ArrayList<>();

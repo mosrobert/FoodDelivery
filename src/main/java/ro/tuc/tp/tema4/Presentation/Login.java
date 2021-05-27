@@ -65,7 +65,9 @@ public class Login {
         JLabel lblNewLabel_1_1 = new JLabel("password");
         lblNewLabel_1_1.setBounds(22, 152, 68, 19);
         frmLogin.getContentPane().add(lblNewLabel_1_1);
-
+        /**
+         * butonul care se foloseste pentru intrarea in conturile respective, verifica daca este client, admin sau angajat
+         */
         JButton btnNewButton = new JButton("Login");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -73,8 +75,9 @@ public class Login {
                 String pass = password.getText();
                 if (Inregistrare.isClient(uname, pass)) {
                     JOptionPane.showMessageDialog(frmLogin, "Authentication succes");
-                    ClientGUI cli = new ClientGUI();
-                    cli.Client(Inregistrare.getCl().stream().filter(c->c.getUsername().equals(uname)&&c.getParola().equals(pass)).collect(Collectors.toList()).get(0).getId());
+                    int id=Inregistrare.getCl().stream().filter(c->c.getUsername().equals(uname)&&c.getParola().equals(pass)).collect(Collectors.toList()).get(0).getId();
+                    ClientGUI cli = new ClientGUI(id);
+                    cli.Client(id);
                 } else if (uname.equals("admin") && pass.equals("password")) {
                     JOptionPane.showMessageDialog(frmLogin, "Authentication succes");
                     AdministratorGUI adm = new AdministratorGUI();

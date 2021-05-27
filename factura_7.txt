@@ -1,0 +1,6 @@
+Comanda nr.7
+Data: 2021-05-27T12:18:23.473886900
+Produse:
+1: meniu
+
+Pret total: 82

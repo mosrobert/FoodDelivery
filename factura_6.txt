@@ -1,0 +1,8 @@
+Comanda nr.6
+Data: 2021-05-27T10:23:13.390734
+Produse:
+1: Red and Green Tomato Salsa 
+2: Barbecued Shrimp 
+3: Smoked Caviar and Hummus on Pita Toasts 
+
+Pret total: 188

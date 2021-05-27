@@ -1,0 +1,7 @@
+Comanda nr.5
+Data: 2021-05-27T10:20:56.270619200
+Produse:
+1: Barbecued Shrimp 
+2: Cilantro-Tomato Salsa 
+
+Pret total: 103

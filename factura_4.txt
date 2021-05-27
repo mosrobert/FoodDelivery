@@ -1,0 +1,9 @@
+Comanda nr.4
+Data: 2021-05-27T10:20:50.709456100
+Produse:
+1: Fresh Corn Tortillas 
+2: Quick & Spicy Asian Pickles 
+3: Spicy Pickled Shallots 
+4: Ethiopian Spice Tea 
+
+Pret total: 254

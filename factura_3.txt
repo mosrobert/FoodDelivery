@@ -1,0 +1,8 @@
+Comanda nr.3
+Data: 2021-05-27T10:19:09.099639400
+Produse:
+1: Spicy Pickled Shallots 
+2: Red and Green Tomato Salsa 
+3: The Original Three-Ingredient Rub 
+
+Pret total: 163
